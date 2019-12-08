@@ -1,3 +1,4 @@
+
 import pygame, sys,fontTools
 import time
 from pyglet.window.mouse import buttons_string
@@ -33,7 +34,7 @@ very_bright_brown=(205,133,63)
 
 # Set screen and icons
 pygame.display.set_caption("BattleShip Fight To the Win!!!")
-all=pygame.image.load("all.jpg")
+all=pygame.image.load("all.png")
 
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
@@ -65,11 +66,15 @@ def buttom(msg,x,y,w,h,ic,ac,action=None,color=BLACK,stage=None):
         if click[0]==1 and action!=None:
             if action=="back":
                 User_Pick()
-            if action=="quit":
+            elif action=="quit":
                 pygame.quit()
                 quit()
             elif action=="color":
                 Start_Game(ic,ac,action,color)
+            elif action=="color":
+                Start_Game(ic,ac,action,color)
+            elif action=="get in touch":
+                Get_in_touch(ic,ac,color,action,stage)
     else:
         pygame.draw.rect(gameDisplay, ic, (x,y,w,h))    
     smalltext=pygame.font.Font('freesansbold.ttf',20) #font and size
@@ -77,6 +82,28 @@ def buttom(msg,x,y,w,h,ic,ac,action=None,color=BLACK,stage=None):
     TextRect.center=((x+(w/2)),(y+(h/2)))  
     gameDisplay.blit(TextSurf,TextRect)
 
+def Get_in_touch(ic,ac,color,action,stage):
+    log=True
+    while log:
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+                pygame.quit()
+                quit()
+        gameDisplay.fill(white)
+        latgetext=pygame.font.Font('freesansbold.ttf',60) #font and size
+        TextSurf,TextRect=text_objects("Ways to Contact:",latgetext,color)
+        TextRect.center=(400,150)
+        gameDisplay.blit(TextSurf,TextRect)
+        smalltext = pygame.font.Font('freesansbold.ttf',40)
+        name=smalltext.render("Mail = help@battleship.help ",1,color)
+        gameDisplay.blit(name,(100,200))
+        name=smalltext.render("phone = 02040608 ",1,color)
+        gameDisplay.blit(name,(100,250))
+        buttom("Quit",600,500,100,50,ic,ac,"quit",color)
+        buttom("Back",200,500,100,50,ic,ac,"back",color,stage)
+        pygame.display.update()
+        clock.tick(60)
+        
 def Start_Game(ic,ac,action,color):#2
     log=True
     while log:
@@ -85,9 +112,16 @@ def Start_Game(ic,ac,action,color):#2
                 pygame.quit()
                 quit()
         gameDisplay.fill(white)
+        latgetext=pygame.font.Font('freesansbold.ttf',60) #font and size
+        TextSurf,TextRect=text_objects("Welcome to Battleship",latgetext,BLACK)
+        TextRect.center=(400,150)
+        gameDisplay.blit(TextSurf,TextRect)
+        buttom("Quit",600,500,100,50,ic,ac,"quit",color)
+        buttom("Back",100,500,100,50,ic,ac,"back",color)
+        buttom("Get in touch",550,50,200,50,ic,ac,"get in touch",color,"2")
         pygame.display.update()
         clock.tick(60)
-
+        
 def User_Pick(): #1
     Pick=True
     while Pick:
@@ -95,15 +129,16 @@ def User_Pick(): #1
             if event.type==pygame.QUIT:
                 pygame.quit()
                 quit()
-        buttom("Color1",76,250,200,80,Green,Bright_Green,"color1")
-        buttom("Color2",305,248,200,80,Green,Bright_Green,"color2")
-        buttom("Color3",535,250,200,80,Green,Bright_Green,"color3")
-        buttom("Color4",305,455,200,80,Green,Bright_Green,"color4")
+        buttom("Color1",23,250,230,88,Blue,Sky_Blue,"color",Blue)
+        buttom("Color2",280,248,230,85,Brown,Bright_Brown,"color",Brown)
+        buttom("Color3",540,250,230,85,RED,Bright_Red,"color",RED)
+        buttom("Color4",280,480,230,85,Green,Bright_Green,"color",Green)
         gameDisplay.blit(all,(0,0))
-        buttom("Quit",600,500,100,50,Green,Bright_Green,"quit")
+        buttom("Quit",600,500,100,50,Green,Bright_Green,"quit",Green)
         pygame.display.update()
-        clock.tick(FPS)
+        clock.tick(60)
 
 User_Pick()
 pygame.quit()
 quit()
+Project.py
