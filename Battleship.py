@@ -65,9 +65,11 @@ def buttom(msg,x,y,w,h,ic,ac,action=None,color=BLACK,stage=None):
         if click[0]==1 and action!=None:
             if action=="back":
                 User_Pick()
-            if action=="quit":
+            elif action=="quit":
                 pygame.quit()
                 quit()
+            elif action=="color":
+                Start_Game(ic,ac,action,color)
             elif action=="color":
                 Start_Game(ic,ac,action,color)
     else:
@@ -87,7 +89,18 @@ def Start_Game(ic,ac,action,color):#2
         gameDisplay.fill(white)
         pygame.display.update()
         clock.tick(60)
-
+        
+def Guest_Menu(color,bright_color,stage):
+    log=True
+    while log:
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+                pygame.quit()
+                quit()
+        gameDisplay.fill(white)
+        pygame.display.update()
+        clock.tick(60)
+        
 def User_Pick(): #1
     Pick=True
     while Pick:
