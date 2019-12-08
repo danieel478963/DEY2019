@@ -13,6 +13,16 @@ display_height=600
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 font = pygame.font.Font(None, 32)
 FPS=60
+Nickname=""
+Boardwidth=12
+Boardheight=12
+Tilesize=40
+X = int((display_width - (Boardwidth * Tilesize) - (200 + 50)) / 2)
+Y = int((display_height - (Boardheight * Tilesize)) / 2)
+FPS=30
+WIDTH = 100
+HEIGHT = 80
+highscore_list = []
 
 # Define some colors
 BLACK = (0, 0, 0)
@@ -46,6 +56,21 @@ Enter=False
 WIDTH = 100
 HEIGHT = 80
 
+def Lost_the_game(color,bright_color):
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:  # when Exit button in the top right is pressed the window will close
+                quit()
+                break
+        gameDisplay.fill(white)
+        latgetext=pygame.font.Font('freesansbold.ttf',60) #font and size
+        TextSurf,TextRect=text_objects("U lost the game xD",latgetext,color)
+        TextRect.center=(400,100)
+        gameDisplay.blit(TextSurf,TextRect)
+        buttom("Back",200,500,100,50,color,bright_color,"back1",color,"3")
+        buttom("Quit",600,500,100,50,color,bright_color,"quit",color)
+        pygame.display.update()    
+        
 def text_objects(text,font,color):
     textSurface=font.render(text,True,color)
     return textSurface,textSurface.get_rect()
@@ -86,7 +111,9 @@ def buttom(msg,x,y,w,h,ic,ac,action=None,color=BLACK,stage=None):
             elif action=="ship":
                 Pick_Board_color(ic,ac,color,stage)
             elif action=="board":
-                pass
+                main(ic,ac,color,stage)
+            elif action=="login":
+                User_Login(ic,ac,color,stage)
     else:
         pygame.draw.rect(gameDisplay, ic, (x,y,w,h))    
     smalltext=pygame.font.Font('freesansbold.ttf',20) #font and size
@@ -120,6 +147,7 @@ def Guest_Menu(color,bright_color,stage):
         buttom("Play",300,200,200,100,color,bright_color,"play",color)
         buttom("Get in touch",550,50,200,50,color,bright_color,"get in touch",color,stage)
         buttom("Quit",600,500,100,50,color,bright_color,"quit",color)
+        buttom("Logout",475,500,100,50,color,bright_color,"back1",color,"2")
         buttom("Statistics",350,500,100,50,color,bright_color,"Statistics",color,"3")
         pygame.display.update()
         clock.tick(60)
@@ -290,7 +318,143 @@ def Start_Game(ic,ac,action,color):#2
         buttom("Get in touch",550,50,200,50,ic,ac,"get in touch",color,"2")
         pygame.display.update()
         clock.tick(60)
+def draw_highlight_tile(x, y):
+    left, top = left_top_coords_tile(x, y)
+    pygame.draw.rect(gameDisplay, Blue,(left, top, Tilesize, Tilesize), 4)
+     
+def get_tile_at_pixel(x, y):
+    for tilex in range(Boardwidth):
+        for tiley in range(Boardheight):
+            left = tilex * Tilesize + X
+            top = tiley * Tilesize + Y
+            tile_rect = pygame.Rect(left, top, Tilesize, Tilesize)
+            if tile_rect.collidepoint(x, y):
+                return (tilex, tiley)
+    return (None, None) 
+
+def left_top_coords_tile(x, y):
+    left = x * Tilesize + X
+    top = y * Tilesize + Y
+    return (left, top)    
+
+def generate_default_tiles(default_value):
+    default_tiles = []
+    for i in range(Boardwidth):
+        default_tiles.append([default_value] * Boardheight)
+    return default_tiles 
+
+def make_ships():
+    slist = []
+    # make battleship
+    ship = []
+    for i in range(4):
+        ship.append(('battleship',False))
+    slist.append(ship)    
+    # make destroyer
+    ship = []
+    for i in range(3):
+        ship.append(('destroyer',False))
+    slist.append(ship)
+    # make submarine
+    ship = []
+    for i in range(3):
+        ship.append(('submarine',False))
+    slist.append(ship) 
+    return slist
+
+def draw_board(board, revealed,color_board,color_ship):
+    for tilex in range(Boardwidth):
+        for tiley in range(Boardheight):
+            left = tilex * Tilesize + X
+            top = tiley * Tilesize + Y
+            if not revealed[tilex][tiley]:
+                pygame.draw.rect(gameDisplay, color_board, (left, top, Tilesize,Tilesize))
+            else:
+                if board[tilex][tiley] != (None, None):
+                    pygame.draw.rect(gameDisplay, color_ship, (left, top, Tilesize, Tilesize))
+                else:
+                    pygame.draw.rect(gameDisplay, Gray, (left, top, Tilesize, Tilesize))
+                    
+def run_game(color_board,ac,color_ship,stage):
+    revealed_tiles = generate_default_tiles(False)
+    main_board = generate_default_tiles((None, None))
+    ship_objs = make_ships() # list of ships to be used, holds list of tuples
+    main_board = add_ships_to_board(main_board, ship_objs)
+    mousex, mousey = 0, 0
+    counter = [] 
+    count=0
+    count_hit=0
+    while True:
+        # counter display (it needs to be here in order to refresh it)
+        Smalltext = pygame.font.Font('freesansbold.ttf', 20)
+        COUNTER_SURF = Smalltext.render(str(len(counter)), True, RED)
+        COUNTER_RECT = SHOTS_SURF.get_rect()
+        COUNTER_RECT.topleft = (display_width - 680, display_height - 570)
+        # end of the counter
+        gameDisplay.fill(white)        
+        gameDisplay.blit(SHOTS_SURF, SHOTS_RECT)
+        gameDisplay.blit(COUNTER_SURF, COUNTER_RECT)
+        draw_board(main_board, revealed_tiles,color_board,color_ship)
+        buttom("Quit",600,500,100,50,Green,Bright_Green,"quit",BLACK)
+        if count>20 :
+            Lost_the_game(ac,ac)
+        mouse_clicked = False  
+        for event in pygame.event.get():
+            #click on board
+            if event.type == MOUSEBUTTONUP:  
+                mousex, mousey = event.pos
+                mouse_clicked = True
+                count+=1
+            #follow Square
+            elif event.type == MOUSEMOTION:
+                mousex, mousey = event.pos 
+        tilex, tiley = get_tile_at_pixel(mousex, mousey)
+        if tilex != None and tiley != None:
+            if not revealed_tiles[tilex][tiley]:
+                draw_highlight_tile(tilex, tiley)
+            if not revealed_tiles[tilex][tiley] and mouse_clicked:
+                revealed_tiles[tilex][tiley] = True
+                counter.append((tilex, tiley))
+        pygame.display.update()
+        clock.tick(FPS)
         
+def main(color_board,ac,color_ship,stage):  
+    global SHOTS_SURF,SHOTS_RECT,COUNTER_SURF,COUNTER_RECT
+    gameDisplay.fill(white)
+    Smalltext = pygame.font.Font('freesansbold.ttf', 20)
+    SHOTS_SURF = Smalltext.render("Shots: ", True, ac)
+    SHOTS_RECT = SHOTS_SURF.get_rect()
+    SHOTS_RECT.topleft = (display_width - 750, display_height - 570)
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+        run_game(color_board,ac,color_ship,stage) 
+
+def add_ships_to_board(board, ships):
+    new_board = board[:]
+    for ship in ships:
+        for i in range(len(ship)):
+            if ship[i][0] == 'battleship':
+                new_board[1][1+i] = ship[i]
+            elif ship[i][0] == 'destroyer':
+                new_board[3][2+i] = ship[i]
+            elif ship[i][0] == 'submarine':
+                new_board[3+i][8] = ship[i]
+    return new_board
+        
+def draw_tile_covers(board, tile, coverage):
+    left, top = left_top_coords_tile(tile[0][0], tile[0][1])
+    if board[tile[0][0]][tile[0][1]] != (None, None):
+        pygame.draw.rect(gameDisplay, Pink, (left, top, Tilesize,Tilesize))
+    else:
+        pygame.draw.rect(gameDisplay, Orange, (left, top, Tilesize, Tilesize))
+    if coverage > 0:
+        pygame.draw.rect(gameDisplay, Brown, (left, top, coverage, Tilesize))
+    pygame.display.update()
+    clock.tick(FPS)
+            
 def User_Pick(): #1
     Pick=True
     while Pick:
