@@ -1,6 +1,5 @@
 # DEY2019
-הורידו את הקובץ עם כל נתונים
-winrar חלצו את התקיה מקובץ ה
+הורידו את הקובץ עם כל נתונים winrar חלצו את התקיה מקובץ ה
 המצורף SQLITE התקינו את קובצ ה
 Eclips לאחר מכן כנסו לתוכנה  
 File => New => Pydev Project => "Enter name to the file" then select Finish
@@ -17,3 +16,4 @@ Properties => location
 לאכן מכן חזרו לתוכנה ולחצו
 ctrl+f11
 והתוכנית תפעל לכם
+
