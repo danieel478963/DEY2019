@@ -1,6 +1,7 @@
 # DEY2019
-הורידו את הקובץ עם כל נתונים winrar חלצו את התקיה מקובץ ה 
-.Eclips לאחר מכן כנסו לתוכנה  
+
+Download the winrar file and Extract the folder from the winrar.
+Then, go to the software Eclips.
 File => New => Pydev Project => "Enter name to the file" then select Finish
 בצד שמאל של התוכנה תפתח תיקיה חדשה בשם שבחרתם,לחצו עליה פעמיים 
 לחצו עליה לחצן ימיני src תהיה תיקיה בשם 
