@@ -1,7 +1,13 @@
 # DEY2019
-
-Download the winrar file and Extract the folder from the winrar Then, go to the software Eclips then do File => New => Pydev Project => "Enter name to the file" then select Finish
-On the left side of the software, open a new folder with the name of your choice, double-click src then Click on it The right click then new => File => File name "Enter name.py" => Finish
+הורידו את הקובץ עם כל נתונים winrar חלצו את התקיה מקובץ ה
+המצורף SQLITE התקינו את קובצ ה
+Eclips לאחר מכן כנסו לתוכנה  
+הורידו את הקובץ עם כל נתונים winrar חלצו את התקיה מקובץ ה 
+.Eclips לאחר מכן כנסו לתוכנה  
+File => New => Pydev Project => "Enter name to the file" then select Finish
+בצד שמאל של התוכנה תפתח תיקיה חדשה בשם שבחרתם,לחצו עליה פעמיים 
+לחצו עליה לחצן ימיני src תהיה תיקיה בשם 
+new => File => File name "Enter name.py" => Finish
 py חשוב בשם הקובץ לעשות בסוף נקודה 
 battleship.py בתיקיה שחילצתם יש קובץ בשם
 פתחו אותו באמצעות כתבן והעתיקו את הקוד משם לקובץ שפתחתם בתוכנה
@@ -12,4 +18,4 @@ Properties => location
 לאכן מכן חזרו לתוכנה ולחצו
 ctrl+f11
 והתוכנית תפעל לכם
-.
+
